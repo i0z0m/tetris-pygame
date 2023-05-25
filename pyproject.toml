@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "tetris-pygame"
+version = "0.1.0"
+description = ""
+authors = ["i0z0m <i0z0mu@gmail.com>"]
+readme = "README.md"
+packages = [{include = "tetris_pygame"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pygame = "^2.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
