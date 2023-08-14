@@ -249,8 +249,6 @@ class Tetris:
                             self.move_block('left')
                         elif event.key == pygame.K_RIGHT:
                             self.move_block('right')
-                        elif event.key == pygame.K_DOWN:
-                            self.move_block('down')
                         elif event.key == pygame.K_UP:
                             self.rotate_block()
                         elif event.key == pygame.K_SPACE: # スペースキーが押されたとき
