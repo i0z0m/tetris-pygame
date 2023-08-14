@@ -153,10 +153,20 @@ class Tetris:
                     pygame.draw.rect(surface, COLORS[block.color], ((block.x + col) * BLOCK_SIZE, (block.y + row) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
                     pygame.draw.rect(surface, (128, 128, 128), ((block.x + col) * BLOCK_SIZE, (block.y + row) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
 
+    def draw_prediction_outline(self, surface, block, y_offset):
+        for row, line in enumerate(block.shape[block.rotation]):
+            for col, char in enumerate(line):
+                if char == '0':
+                    pygame.draw.rect(surface, COLORS[block.color], ((block.x + col) * BLOCK_SIZE, (block.y + row + y_offset) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 1)
+
     def draw(self, surface):
         surface.fill((0, 0, 0))
         self.draw_grid(surface)
         self.draw_block(surface, self.current_block)
+
+        # 予測地点の描画
+        y_offset = self.predict_fall(self.current_block)
+        self.draw_prediction_outline(surface, self.current_block, y_offset)
 
     def move_block(self, direction):
         if direction == 'left':
@@ -178,6 +188,12 @@ class Tetris:
         if full_lines:
             self.clear_lines(full_lines)
         self.current_block = self.create_new_block()
+
+    def predict_fall(self, block):
+        y_offset = 0
+        while self.is_valid_move(block, y_offset=y_offset + 1):
+            y_offset += 1
+        return y_offset
 
     def rotate_block(self):
         temp_rotation = self.current_block.rotation
