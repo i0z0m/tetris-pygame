@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 # テトリスの定数
 WIDTH, HEIGHT = 800, 600
@@ -130,6 +131,7 @@ class Tetris:
         self.play_height = PLAY_HEIGHT
         self.grid = [[0] * (self.play_width // BLOCK_SIZE) for _ in range(self.play_height // BLOCK_SIZE)]
         self.current_block = self.create_new_block()
+        self.game_over = False
 
     def create_new_block(self):
         shape = random.choice(SHAPES)
@@ -162,9 +164,19 @@ class Tetris:
         elif direction == 'right':
             if self.is_valid_move(self.current_block, x_offset=1):
                 self.current_block.move_right()
-        elif direction == 'down':
-            if self.is_valid_move(self.current_block, y_offset=1):
-                self.current_block.move_down()
+
+    def soft_drop(self):
+        if self.is_valid_move(self.current_block, y_offset=1):
+            self.current_block.move_down()
+
+    def hard_drop(self):
+        while self.is_valid_move(self.current_block, y_offset=1):
+            self.current_block.move_down()
+        self.place_block(self.current_block)
+        full_lines = self.check_lines()
+        if full_lines:
+            self.clear_lines(full_lines)
+        self.current_block = self.create_new_block()
 
     def rotate_block(self):
         temp_rotation = self.current_block.rotation
@@ -213,34 +225,49 @@ class Tetris:
             self.current_block = self.create_new_block()
             if not self.is_valid_move(self.current_block):
                 # ゲームオーバーの処理
-                pass
+                self.game_over = True
 
     def run(self):
         pygame.init()
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        soft_drop_speed = 8
+        normal_tick_rate = 2
         clock = pygame.time.Clock()
-        game_over = False
 
-        while not game_over:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    game_over = True
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.move_block('left')
-                    elif event.key == pygame.K_RIGHT:
-                        self.move_block('right')
-                    elif event.key == pygame.K_DOWN:
-                        self.move_block('down')
-                    elif event.key == pygame.K_UP:
-                        self.rotate_block()
+        while not self.game_over:
+            while not self.game_over:
+                tick_rate = normal_tick_rate
+                keys = pygame.key.get_pressed() # 押されているキーを取得
+                if keys[pygame.K_DOWN]: # 下キーが押されているかチェック
+                    self.move_block('down')
+                    tick_rate += soft_drop_speed # 落下速度を早める
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        game_over = True
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_LEFT:
+                            self.move_block('left')
+                        elif event.key == pygame.K_RIGHT:
+                            self.move_block('right')
+                        elif event.key == pygame.K_DOWN:
+                            self.move_block('down')
+                        elif event.key == pygame.K_UP:
+                            self.rotate_block()
+                        elif event.key == pygame.K_SPACE: # スペースキーが押されたとき
+                            self.hard_drop() # ブロックを一気に下に落とす
 
-            self.update()
-            self.draw(screen)
-            pygame.display.flip()
-            clock.tick(10)
+                self.update()
+                self.draw(screen)
+                pygame.display.flip()
+                clock.tick(tick_rate)
 
-        pygame.quit()
+        font = pygame.font.Font(None, 36)
+        game_over_text = font.render('Game Over', True, (255, 0, 0))
+        game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        screen.blit(game_over_text, game_over_rect)
+        pygame.display.flip()
+        time.sleep(3)
+
 
 
 # テトリスのゲームの実行
