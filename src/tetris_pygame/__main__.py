@@ -132,6 +132,7 @@ class Tetris:
         self.grid = [[0] * (self.play_width // BLOCK_SIZE) for _ in range(self.play_height // BLOCK_SIZE)]
         self.current_block = self.create_new_block()
         self.game_over = False
+        self.quit_game = False
 
     def create_new_block(self):
         shape = random.choice(SHAPES)
@@ -243,7 +244,8 @@ class Tetris:
                     tick_rate += soft_drop_speed # 落下速度を早める
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        game_over = True
+                        self.game_over = True
+                        self.quit_game = True
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_LEFT:
                             self.move_block('left')
@@ -258,13 +260,15 @@ class Tetris:
                 self.draw(screen)
                 pygame.display.flip()
                 clock.tick(tick_rate)
+        if not self.quit_game:
+            font = pygame.font.Font(None, 36)
+            game_over_text = font.render('Game Over', True, (255, 0, 0))
+            game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+            screen.blit(game_over_text, game_over_rect)
+            pygame.display.flip()
+            time.sleep(3)
 
-        font = pygame.font.Font(None, 36)
-        game_over_text = font.render('Game Over', True, (255, 0, 0))
-        game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-        screen.blit(game_over_text, game_over_rect)
-        pygame.display.flip()
-        time.sleep(3)
+        pygame.quit()
 
 
 
