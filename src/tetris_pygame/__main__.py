@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 import random
 import time
 
@@ -125,6 +126,16 @@ COLORS = [
     (0, 0, 255),      # 6: J-テトリミノ（青色）
     (128, 0, 128),    # 7: T-テトリミノ（紫）
 ]
+
+
+# Starting the mixer
+mixer.init()
+# Loading the song
+mixer.music.load("Tetris.mp3")
+# Setting the volume
+mixer.music.set_volume(0.7)
+# Start playing the song
+mixer.music.play(-1)
 
 
 # テトリスのブロッククラス
@@ -306,6 +317,7 @@ class Tetris:
             game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(game_over_text, game_over_rect)
             pygame.display.flip()
+            mixer.music.stop()
             time.sleep(3)
 
         pygame.quit()
