@@ -1,15 +1,18 @@
 import pygame
 from pygame import mixer
+from typing import List
 import random
 import time
 
 # テトリスの定数
-WIDTH, HEIGHT = 800, 600
-PLAY_WIDTH, PLAY_HEIGHT = 300, 600
-BLOCK_SIZE = 30
+WIDTH:int = 800
+HEIGHT:int  = 600
+PLAY_WIDTH:int = 300
+PLAY_HEIGHT:int = 600
+BLOCK_SIZE:int = 30
 
 # テトリスのブロックの形状
-SHAPES = [
+SHAPES: List[List[List[str]]] = [
     # 0: S-テトリミノ
     [['.....',
       '.....',
