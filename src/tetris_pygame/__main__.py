@@ -240,6 +240,8 @@ class Tetris:
         if full_lines:
             self.clear_lines(full_lines)
         self.current_block = self.create_new_block()
+        self.next_blocks.pop(0)
+        self.next_blocks.append(self.create_new_block())
 
     def predict_fall(self, block):
         y_offset = 0
