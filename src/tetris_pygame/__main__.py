@@ -5,7 +5,7 @@ import random
 import time
 
 # テトリスの定数
-WIDTH:int = 800
+WIDTH:int = 400
 HEIGHT:int  = 600
 PLAY_WIDTH:int = 300
 PLAY_HEIGHT:int = 600
