@@ -5,7 +5,7 @@ import random
 import time
 
 # テトリスの定数
-WIDTH:int = 400
+WIDTH:int = 450
 HEIGHT:int  = 600
 PLAY_WIDTH:int = 300
 PLAY_HEIGHT:int = 600
@@ -169,6 +169,7 @@ class Tetris:
         self.play_height = PLAY_HEIGHT
         self.grid = [[0] * (self.play_width // BLOCK_SIZE) for _ in range(self.play_height // BLOCK_SIZE)]
         self.current_block = self.create_new_block()
+        self.next_blocks = [self.create_new_block() for _ in range(3)]
         self.game_over = False
         self.quit_game = False
 
@@ -205,6 +206,19 @@ class Tetris:
         # 予測地点の描画
         y_offset = self.predict_fall(self.current_block)
         self.draw_prediction_outline(surface, self.current_block, y_offset)
+
+        # 画面右側に次のブロックを描画
+        x = self.play_width
+        y = 10
+        for block in self.next_blocks:
+            for row_index, row in enumerate(block.shape[block.rotation]):
+                for col_index, cell in enumerate(row):
+                    if cell == '0':
+                        draw_x = x + col_index * BLOCK_SIZE
+                        draw_y = y + row_index * BLOCK_SIZE
+                        pygame.draw.rect(surface, COLORS[block.color], (draw_x, draw_y, BLOCK_SIZE, BLOCK_SIZE))
+                        pygame.draw.rect(surface, (128, 128, 128), (draw_x, draw_y, BLOCK_SIZE, BLOCK_SIZE), 1)
+            y += len(block.shape[block.rotation]) * BLOCK_SIZE + 10
 
     def move_block(self, direction):
         if direction == 'left':
@@ -277,7 +291,8 @@ class Tetris:
             full_lines = self.check_lines()
             if full_lines:
                 self.clear_lines(full_lines)
-            self.current_block = self.create_new_block()
+            self.current_block = self.next_blocks.pop(0)
+            self.next_blocks.append(self.create_new_block())
             if not self.is_valid_move(self.current_block):
                 # ゲームオーバーの処理
                 self.game_over = True
