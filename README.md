@@ -1,3 +1,3 @@
 # tetris-pygame
 
-Describe your project here.
+Tetris made by pygame co-produced with ChatGPT
