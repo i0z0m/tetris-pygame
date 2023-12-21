@@ -133,13 +133,6 @@ COLORS = [
 
 # Starting the mixer
 mixer.init()
-# Loading the song
-mixer.music.load("Tetris.ogg")
-# Setting the volume
-mixer.music.set_volume(0.7)
-# Start playing the song
-mixer.music.play(-1)
-
 
 # テトリスのブロッククラス
 class Block:
