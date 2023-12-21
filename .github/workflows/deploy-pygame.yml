@@ -18,7 +18,7 @@ jobs:
             python -m pip install pygbag
             echo "Successfully installed pygbag"
             echo "Attempting to build the game"
-            python -m pygbag --build $GITHUB_WORKSPACE/src/tetris_pygame/__main__.py
+            python -m pygbag --build $GITHUB_WORKSPACE/src/tetris_pygame/main.py
             echo "Successfully build the game and complied to WebAssembly"
 
     - name : Deploy 🚀
