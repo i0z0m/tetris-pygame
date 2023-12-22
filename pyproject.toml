@@ -1,13 +1,19 @@
 [project]
 name = "tetris-pygame"
 version = "0.1.0"
-description = "Add a short description here"
+description = "Add your description here"
 authors = [
     { name = "i0z0m", email = "i0z0mu@gmail.com" }
 ]
-dependencies = ["pygame~=2.4.0"]
+dependencies = [
+    "pygame>=2.5.2",
+    "pygbag>=0.8.5",
+]
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.11"
+
+[project.scripts]
+hello = "tetris-pygame:hello"
 
 [build-system]
 requires = ["hatchling"]
@@ -15,5 +21,10 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
+dev-dependencies = []
+
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tetris_pygame"]
