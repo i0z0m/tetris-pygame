@@ -1,5 +1,6 @@
 import pygame
 from pygame import mixer
+import asyncio
 from typing import List
 import random
 import time
@@ -292,7 +293,7 @@ class Tetris:
                 # ゲームオーバーの処理
                 self.game_over = True
 
-    def run(self):
+    async def run(self):
         pygame.init()
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         soft_drop_speed = 8
@@ -300,30 +301,29 @@ class Tetris:
         clock = pygame.time.Clock()
 
         while not self.game_over:
-            while not self.game_over:
-                tick_rate = normal_tick_rate
-                keys = pygame.key.get_pressed() # 押されているキーを取得
-                if keys[pygame.K_DOWN]: # 下キーが押されているかチェック
-                    self.move_block('down')
-                    tick_rate += soft_drop_speed # 落下速度を早める
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        self.game_over = True
-                        self.quit_game = True
-                    elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_LEFT:
-                            self.move_block('left')
-                        elif event.key == pygame.K_RIGHT:
-                            self.move_block('right')
-                        elif event.key == pygame.K_UP:
-                            self.rotate_block()
-                        elif event.key == pygame.K_SPACE: # スペースキーが押されたとき
-                            self.hard_drop() # ブロックを一気に下に落とす
-
-                self.update()
-                self.draw(screen)
-                pygame.display.flip()
-                clock.tick(tick_rate)
+            await asyncio.sleep(0)
+            tick_rate = normal_tick_rate
+            keys = pygame.key.get_pressed() # 押されているキーを取得
+            if keys[pygame.K_DOWN]: # 下キーが押されているかチェック
+                self.move_block('down')
+                tick_rate += soft_drop_speed # 落下速度を早める
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.game_over = True
+                    self.quit_game = True
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        self.move_block('left')
+                    elif event.key == pygame.K_RIGHT:
+                        self.move_block('right')
+                    elif event.key == pygame.K_UP:
+                        self.rotate_block()
+                    elif event.key == pygame.K_SPACE: # スペースキーが押されたとき
+                        self.hard_drop() # ブロックを一気に下に落とす
+            self.update()
+            self.draw(screen)
+            pygame.display.flip()
+            clock.tick(tick_rate)
         if not self.quit_game:
             font = pygame.font.Font(None, 36)
             game_over_text = font.render('Game Over', True, (255, 0, 0))
@@ -338,6 +338,8 @@ class Tetris:
 
 
 # テトリスのゲームの実行
-if __name__ == '__main__':
-    tetris = Tetris()
-    tetris.run()
+async def main():
+    tetris = Tetris()  # Tetris インスタンスの作成
+    await tetris.run()
+
+asyncio.run(main())
