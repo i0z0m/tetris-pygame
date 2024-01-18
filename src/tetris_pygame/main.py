@@ -299,6 +299,8 @@ class Tetris:
         normal_tick_rate = 2
         clock = pygame.time.Clock()
 
+        touch_start = None
+
         while not self.game_over:
             await asyncio.sleep(0)
             tick_rate = normal_tick_rate
@@ -319,6 +321,19 @@ class Tetris:
                         self.rotate_block()
                     elif event.key == pygame.K_SPACE: # スペースキーが押されたとき
                         self.hard_drop() # ブロックを一気に下に落とす
+                elif event.type == pygame.FINGERDOWN: # タッチパネルがタッチされたとき
+                    touch_start = (event.x * WIDTH, event.y * HEIGHT) # タッチ開始位置を記録
+                elif event.type == pygame.FINGERUP: # タッチが終了したとき
+                    if touch_start is not None:
+                        touch_end = (event.x * WIDTH, event.y * HEIGHT) # タッチ終了位置を取得
+                        if touch_end[0] < touch_start[0]: # 左にスワイプ
+                            self.move_block('left')
+                        elif touch_end[0] > touch_start[0]: # 右にスワイプ
+                            self.move_block('right')
+                        if touch_end[1] < touch_start[1]: # 上にスワイプ
+                            self.rotate_block()
+                        elif touch_end[1] > touch_start[1]: # 下にスワイプ
+                            self.hard_drop()
             self.update()
             self.draw(screen)
             pygame.display.flip()
