@@ -330,11 +330,7 @@ class Tetris:
                         touch_current = (event.x * WIDTH, event.y * HEIGHT) # 現在のタッチ位置を取得
                         dx = abs(touch_current[0] - touch_start[0])
                         dy = abs(touch_current[1] - touch_start[1])
-                        swipe_threshold = 50  # Set a threshold for swipe distance
-                        if dy > swipe_threshold:
-                            if touch_current[1] > touch_start[1]: # 下にスワイプ
-                                self.hard_drop() # ブロックを一気に下に落とす
-                        elif dx > swipe_threshold / 10: # 左または右にスワイプ
+                        if dx > 10: # 左または右にスワイプ
                             if touch_current[0] < touch_start[0]: # 左にスワイプ
                                 self.move_block('left')
                             elif touch_current[0] > touch_start[0]: # 右にスワイプ
@@ -347,6 +343,8 @@ class Tetris:
                         swipe_threshold = 50  # Set a threshold for swipe distance
                         if dx < swipe_threshold and dy < swipe_threshold: # タッチ開始と終了の位置がほぼ同じ（タップ）
                             self.rotate_block()
+                        elif touch_current[1] > touch_start[1]: # 下にスワイプ
+                            self.hard_drop()
             self.update()
             self.draw(screen)
             pygame.display.flip()
