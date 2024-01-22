@@ -347,7 +347,7 @@ class Tetris:
                         swipe_threshold = 50  # Set a threshold for swipe distance
                         if dx < swipe_threshold and dy < swipe_threshold: # タッチ開始と終了の位置がほぼ同じ（タップ）
                             self.rotate_block()
-                        elif touch_current[1] > touch_start[1]: # 下にスワイプ
+                        elif dy > swipe_threshold: # 下にスワイプ
                             self.hard_drop()
             self.update()
             self.draw(screen)
