@@ -326,14 +326,17 @@ class Tetris:
                 elif event.type == pygame.FINGERUP: # タッチが終了したとき
                     if touch_start is not None:
                         touch_end = (event.x * WIDTH, event.y * HEIGHT) # タッチ終了位置を取得
-                        if touch_end[0] < touch_start[0]: # 左にスワイプ
-                            self.move_block('left')
-                        elif touch_end[0] > touch_start[0]: # 右にスワイプ
-                            self.move_block('right')
-                        if touch_end[1] < touch_start[1]: # 上にスワイプ
+                        dx = abs(touch_end[0] - touch_start[0])
+                        dy = abs(touch_end[1] - touch_start[1])
+                        if dx < 10 and dy < 10: # タッチ開始と終了の位置がほぼ同じ（タップ）
                             self.rotate_block()
-                        elif touch_end[1] > touch_start[1]: # 下にスワイプ
-                            self.hard_drop()
+                        else:
+                            if touch_end[0] < touch_start[0]: # 左にスワイプ
+                                self.move_block('left')
+                            elif touch_end[0] > touch_start[0]: # 右にスワイプ
+                                self.move_block('right')
+                            if touch_end[1] > touch_start[1]: # 下にスワイプ
+                                self.hard_drop()
             self.update()
             self.draw(screen)
             pygame.display.flip()
