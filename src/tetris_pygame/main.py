@@ -300,6 +300,7 @@ class Tetris:
         clock = pygame.time.Clock()
 
         touch_start = None
+        touch_current = None
 
         while not self.game_over:
             await asyncio.sleep(0)
@@ -323,20 +324,27 @@ class Tetris:
                         self.hard_drop() # ブロックを一気に下に落とす
                 elif event.type == pygame.FINGERDOWN: # タッチパネルがタッチされたとき
                     touch_start = (event.x * WIDTH, event.y * HEIGHT) # タッチ開始位置を記録
-                elif event.type == pygame.FINGERUP: # タッチが終了したとき
+                    touch_current = touch_start
+                elif event.type == pygame.FINGERMOTION: # タッチパネル上で指が動かされたとき
                     if touch_start is not None:
-                        touch_end = (event.x * WIDTH, event.y * HEIGHT) # タッチ終了位置を取得
-                        dx = abs(touch_end[0] - touch_start[0])
-                        dy = abs(touch_end[1] - touch_start[1])
+                        touch_current = (event.x * WIDTH, event.y * HEIGHT) # 現在のタッチ位置を取得
+                        dx = abs(touch_current[0] - touch_start[0])
+                        dy = abs(touch_current[1] - touch_start[1])
+                        if dx < 10 and dy > 10: # 下にスワイプ
+                            self.move_block('down')
+                        elif touch_current[0] < touch_start[0]: # 左にスワイプ
+                            self.move_block('left')
+                        elif touch_current[0] > touch_start[0]: # 右にスワイプ
+                            self.move_block('right')
+                        touch_start = touch_current # タッチ開始位置を更新
+                elif event.type == pygame.FINGERUP: # タッチが終了したとき
+                    if touch_start is not None and touch_current is not None:
+                        dx = abs(touch_current[0] - touch_start[0])
+                        dy = abs(touch_current[1] - touch_start[1])
                         if dx < 10 and dy < 10: # タッチ開始と終了の位置がほぼ同じ（タップ）
                             self.rotate_block()
-                        else:
-                            if touch_end[0] < touch_start[0]: # 左にスワイプ
-                                self.move_block('left')
-                            elif touch_end[0] > touch_start[0]: # 右にスワイプ
-                                self.move_block('right')
-                            if touch_end[1] > touch_start[1]: # 下にスワイプ
-                                self.hard_drop()
+                        elif touch_current[1] > touch_start[1]: # 下にスワイプ
+                            self.hard_drop()
             self.update()
             self.draw(screen)
             pygame.display.flip()
