@@ -330,6 +330,12 @@ class Tetris:
                         touch_current = (event.x * WIDTH, event.y * HEIGHT) # 現在のタッチ位置を取得
                         dx = abs(touch_current[0] - touch_start[0])
                         dy = abs(touch_current[1] - touch_start[1])
+                        if dy > 10: # 上または下にスワイプ
+                            if touch_current[1] > touch_start[1]: # 下にスワイプ
+                                self.move_block('down')
+                                tick_rate += soft_drop_speed # 落下速度を早める
+                            else: # 上にスワイプ
+                                self.rotate_block() # ブロックを回転させる
                         if dx > 10: # 左または右にスワイプ
                             if touch_current[0] < touch_start[0]: # 左にスワイプ
                                 self.move_block('left')
