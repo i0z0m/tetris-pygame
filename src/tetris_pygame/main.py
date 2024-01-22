@@ -294,6 +294,8 @@ class Tetris:
 
     async def run(self):
         pygame.init()
+        pygame.display.set_caption("Tetris")
+
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         soft_drop_speed = 8
         normal_tick_rate = 2
