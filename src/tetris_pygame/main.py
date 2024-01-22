@@ -344,7 +344,7 @@ class Tetris:
                     if touch_start is not None and touch_current is not None:
                         dx = abs(touch_current[0] - touch_start[0])
                         dy = abs(touch_current[1] - touch_start[1])
-                        swipe_threshold = 50  # Set a threshold for swipe distance
+                        swipe_threshold = 20  # Set a threshold for swipe distance
                         if dx < swipe_threshold and dy < swipe_threshold: # タッチ開始と終了の位置がほぼ同じ（タップ）
                             self.rotate_block()
                         elif dy > swipe_threshold: # 下にスワイプ
