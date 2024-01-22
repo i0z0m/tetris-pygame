@@ -334,9 +334,7 @@ class Tetris:
                         if dy > swipe_threshold: # 上または下にスワイプ
                             if touch_current[1] > touch_start[1]: # 下にスワイプ
                                 self.hard_drop() # ブロックを一気に下に落とす
-                            else: # 上にスワイプ
-                                self.rotate_block() # ブロックを回転させる
-                        elif dx > swipe_threshold: # 左または右にスワイプ
+                        elif dx > swipe_threshold / 5: # 左または右にスワイプ
                             if touch_current[0] < touch_start[0]: # 左にスワイプ
                                 self.move_block('left')
                             elif touch_current[0] > touch_start[0]: # 右にスワイプ
