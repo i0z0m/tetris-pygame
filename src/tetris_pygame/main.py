@@ -303,7 +303,7 @@ class Tetris:
         touch_current = None
 
         while not self.game_over:
-            await asyncio.sleep(1)
+            await asyncio.sleep(0)
             tick_rate = normal_tick_rate
             keys = pygame.key.get_pressed() # 押されているキーを取得
             if keys[pygame.K_DOWN]: # 下キーが押されているかチェック
