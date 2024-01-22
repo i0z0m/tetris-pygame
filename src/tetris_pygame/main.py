@@ -331,10 +331,10 @@ class Tetris:
                         dx = abs(touch_current[0] - touch_start[0])
                         dy = abs(touch_current[1] - touch_start[1])
                         swipe_threshold = 50  # Set a threshold for swipe distance
-                        if dy > swipe_threshold: # 上または下にスワイプ
+                        if dy > swipe_threshold:
                             if touch_current[1] > touch_start[1]: # 下にスワイプ
                                 self.hard_drop() # ブロックを一気に下に落とす
-                        elif dx > swipe_threshold: # 左または右にスワイプ
+                        elif dx > swipe_threshold / 10: # 左または右にスワイプ
                             if touch_current[0] < touch_start[0]: # 左にスワイプ
                                 self.move_block('left')
                             elif touch_current[0] > touch_start[0]: # 右にスワイプ
