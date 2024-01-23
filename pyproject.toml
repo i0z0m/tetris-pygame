@@ -26,3 +26,7 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tetris_pygame"]
+
+[tool.ruff]
+line-length = 100
+indent-width = 4
